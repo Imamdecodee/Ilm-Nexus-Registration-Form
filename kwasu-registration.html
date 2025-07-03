@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>KWASU Tech Innovation Conference – Register</title>
+  <style>
+    :root {
+      --primary: #0073e6;
+      --dark: #003366;
+      --gray: #f2f4f8;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background: var(--gray);
+      color: #1f1f1f;
+    }
+
+    .header {
+      background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0,0,0,0.5)),
+                  url('https://images.unsplash.com/photo-1581090700227-1e7d50d076f1?auto=format&fit=crop&w=1350&q=80') no-repeat center center/cover;
+      padding: 80px 20px 60px;
+      color: white;
+      text-align: center;
+      position: relative;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 32px;
+      font-weight: bold;
+    }
+
+    .header p {
+      font-size: 16px;
+      margin-top: 8px;
+    }
+
+    .admin-login {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(255,255,255,0.9);
+      color: var(--dark);
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: -30px auto 50px;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    label {
+      display: block;
+      margin: 12px 0 6px;
+      font-weight: 500;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 15px;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px 20px;
+      width: 100%;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background: #005bb5;
+    }
+
+    .success-message {
+      margin-top: 20px;
+      text-align: center;
+      color: green;
+      font-weight: bold;
+    }
+
+    @media (max-width: 600px) {
+      .admin-login {
+        font-size: 12px;
+        padding: 6px 12px;
+      }
+
+      .header h1 {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <a href="admin-login.html" class="admin-login">Admin Login</a>
+    <h1>KWASU Tech Innovation Conference 2025</h1>
+    <p>Powered by Ilm Nexus – Bridging Faith, Skills & Business</p>
+  </div>
+
+  <div class="container">
+    <h2>Register to Attend</h2>
+    <form id="registrationForm">
+      <label for="name">Full Name</label>
+      <input type="text" id="name" required>
+
+      <label for="email">Email Address</label>
+      <input type="email" id="email" required>
+
+      <label for="phone">Phone Number</label>
+      <input type="tel" id="phone" required>
+
+      <label for="school">University / Institution</label>
+      <input type="text" id="school" required>
+
+      <label for="pitch">Do you want to pitch an idea?</label>
+      <select id="pitch" required onchange="toggleIdeaField(this.value)">
+        <option value="">-- Select an option --</option>
+        <option value="Yes">Yes</option>
+        <option value="No">No</option>
+      </select>
+
+      <div id="ideaSection" style="display:none;">
+        <label for="idea">Briefly describe your idea</label>
+        <textarea id="idea" placeholder="Your startup or innovation idea..."></textarea>
+      </div>
+
+      <button type="submit">Submit Registration</button>
+      <div class="success-message" id="successMsg"></div>
+    </form>
+  </div>
+
+  <script>
+    function toggleIdeaField(value) {
+      document.getElementById("ideaSection").style.display = value === "Yes" ? "block" : "none";
+    }
+
+    document.getElementById("registrationForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const school = document.getElementById("school").value.trim();
+      const pitch = document.getElementById("pitch").value;
+      const idea = document.getElementById("idea").value.trim();
+
+      if (!name || !email || !phone || !school || !pitch) {
+        alert("Please fill all required fields.");
+        return;
+      }
+
+      const newEntry = {
+        name,
+        email,
+        phone,
+        school,
+        pitchInterest: pitch,
+        idea: pitch === "Yes" ? idea : "",
+        timestamp: new Date().toLocaleString()
+      };
+
+      const registrations = JSON.parse(localStorage.getItem("kwasu_registrations") || "[]");
+      registrations.push(newEntry);
+      localStorage.setItem("kwasu_registrations", JSON.stringify(registrations));
+
+      document.getElementById("successMsg").textContent = "✅ Registration successful! Check your email for confirmation.";
+
+      // Auto-send confirmation email using EmailJS (optional setup below)
+      sendEmailConfirmation(name, email);
+
+      document.getElementById("registrationForm").reset();
+      toggleIdeaField("");  // hide idea field
+    });
+
+    // Optional: Use EmailJS to send email
+    function sendEmailConfirmation(name, email) {
+      // REPLACE WITH YOUR EMAILJS service
+      // You must configure this at https://www.emailjs.com/
+
+      // Example with EmailJS (you must sign up and get keys first)
+      // emailjs.send("service_id", "template_id", {
+      //   user_name: name,
+      //   user_email: email,
+      // })
+      // .then(() => console.log("Email sent"))
+      // .catch(err => console.error("Email error", err));
+    }
+  </script>
+
+</body>
+</html>

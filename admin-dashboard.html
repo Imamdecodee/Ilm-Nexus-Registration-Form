@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard – KWASU Conference</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background: #f5f8fc;
+      color: #1e1e1e;
+    }
+
+    .navbar {
+      background: #0073e6;
+      color: white;
+      padding: 15px 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .navbar h1 {
+      margin: 0;
+      font-size: 22px;
+    }
+
+    .logout-btn, .export-btn {
+      background: white;
+      color: #0073e6;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .logout-btn:hover, .export-btn:hover {
+      background: #e6f0ff;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 30px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.06);
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      font-size: 20px;
+      color: #333;
+    }
+
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    #searchInput {
+      flex-grow: 1;
+      padding: 10px 14px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 15px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 15px;
+      margin-top: 10px;
+    }
+
+    th, td {
+      padding: 12px 10px;
+      border: 1px solid #e5e5e5;
+      text-align: left;
+    }
+
+    th {
+      background: #f0f4f8;
+    }
+
+    tr:hover {
+      background-color: #f9fbff;
+    }
+
+    @media (max-width: 768px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+
+      thead {
+        display: none;
+      }
+
+      tr {
+        margin-bottom: 20px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        overflow: hidden;
+      }
+
+      td {
+        padding-left: 50%;
+        position: relative;
+      }
+
+      td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 15px;
+        font-weight: bold;
+        color: #555;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="navbar">
+    <h1>Admin Dashboard</h1>
+    <div>
+      <button class="export-btn" onclick="exportCSV()">Export CSV</button>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <h2>Registered Participants</h2>
+
+    <div class="toolbar">
+      <input type="text" id="searchInput" placeholder="Search participants..." />
+    </div>
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>School</th>
+            <th>Pitching?</th>
+            <th>Idea</th>
+            <th>Timestamp</th>
+          </tr>
+        </thead>
+        <tbody id="dataBody">
+          <!-- Rows inserted via JavaScript -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    // Check admin auth
+    if (localStorage.getItem("admin_logged_in") !== "yes") {
+      window.location.href = "admin-login.html";
+    }
+
+    const registrations = JSON.parse(localStorage.getItem("kwasu_registrations") || "[]");
+    const tbody = document.getElementById("dataBody");
+
+    function renderTable(data) {
+      tbody.innerHTML = "";
+
+      if (data.length === 0) {
+        tbody.innerHTML = "<tr><td colspan='7' style='text-align:center;'>No matching results.</td></tr>";
+        return;
+      }
+
+      data.forEach(reg => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td data-label="Name">${reg.name}</td>
+          <td data-label="Email">${reg.email}</td>
+          <td data-label="Phone">${reg.phone}</td>
+          <td data-label="School">${reg.school}</td>
+          <td data-label="Pitching?">${reg.pitchInterest}</td>
+          <td data-label="Idea">${reg.idea || "—"}</td>
+          <td data-label="Timestamp">${reg.timestamp || "—"}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    renderTable(registrations);
+
+    document.getElementById("searchInput").addEventListener("input", function () {
+      const keyword = this.value.toLowerCase();
+      const filtered = registrations.filter(reg =>
+        reg.name.toLowerCase().includes(keyword) ||
+        reg.email.toLowerCase().includes(keyword) ||
+        reg.phone.toLowerCase().includes(keyword) ||
+        reg.school.toLowerCase().includes(keyword) ||
+        (reg.idea && reg.idea.toLowerCase().includes(keyword))
+      );
+      renderTable(filtered);
+    });
+
+    function logout() {
+      localStorage.removeItem("admin_logged_in");
+      window.location.href = "admin-login.html";
+    }
+
+    function exportCSV() {
+      const headers = ["Name", "Email", "Phone", "School", "Pitching?", "Idea", "Timestamp"];
+      const rows = registrations.map(r =>
+        [r.name, r.email, r.phone, r.school, r.pitchInterest, r.idea || "", r.timestamp || ""]
+      );
+
+      let csvContent = "data:text/csv;charset=utf-8," 
+        + [headers.join(","), ...rows.map(row => row.map(field => `"${field}"`).join(","))].join("\n");
+
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", "kwasu_registrations.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  </script>
+
+</body>
+</html>
