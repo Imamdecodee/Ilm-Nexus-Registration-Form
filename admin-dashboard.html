@@ -127,14 +127,16 @@
 </head>
 <body>
 
+  <!-- Navbar -->
   <div class="navbar">
-    <h1>Admin Dashboard</h1>
+    <h1>KWASU Conference – Admin Dashboard</h1>
     <div>
       <button class="export-btn" onclick="exportCSV()">Export CSV</button>
       <button class="logout-btn" onclick="logout()">Logout</button>
     </div>
   </div>
 
+  <!-- Main Container -->
   <div class="container">
     <h2>Registered Participants</h2>
 
@@ -156,14 +158,15 @@
           </tr>
         </thead>
         <tbody id="dataBody">
-          <!-- Rows inserted via JavaScript -->
+          <!-- Populated via JavaScript -->
         </tbody>
       </table>
     </div>
   </div>
 
+  <!-- Scripts -->
   <script>
-    // Check admin auth
+    // Check login
     if (localStorage.getItem("admin_logged_in") !== "yes") {
       window.location.href = "admin-login.html";
     }
@@ -173,9 +176,8 @@
 
     function renderTable(data) {
       tbody.innerHTML = "";
-
       if (data.length === 0) {
-        tbody.innerHTML = "<tr><td colspan='7' style='text-align:center;'>No matching results.</td></tr>";
+        tbody.innerHTML = "<tr><td colspan='7' style='text-align:center;'>No results found.</td></tr>";
         return;
       }
 
