@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Send Bulk Email</title>
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      padding: 30px;
+      background-color: #f2f6ff;
+      color: #222;
+    }
+
+    h2 {
+      color: #0073e6;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin: 12px 0 5px;
+      font-weight: 500;
+    }
+
+    input, textarea, button {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    button {
+      background-color: #0073e6;
+      color: white;
+      margin-top: 20px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background-color: #005bb5;
+    }
+
+    #status {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    #logArea {
+      margin-top: 30px;
+      background: #fff;
+      border: 1px solid #ddd;
+      padding: 15px;
+      border-radius: 8px;
+    }
+
+    .log-success {
+      color: green;
+    }
+
+    .log-failure {
+      color: red;
+    }
+
+    .log-pending {
+      color: orange;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>📤 Send Bulk Email – Ilm Nexus</h2>
+
+  <form id="bulkEmailForm">
+    <label for="fromEmail">Your Email (reply to):</label>
+    <input type="email" id="fromEmail" placeholder="yourname@example.com" required />
+
+    <label for="subject">Subject:</label>
+    <input type="text" id="subject" placeholder="Enter email subject..." required />
+
+    <label for="emails">Recipient Emails (comma separated):</label>
+    <input type="text" id="emails" placeholder="e.g. user1@gmail.com, user2@yahoo.com" required />
+
+    <label for="message">Message:</label>
+    <textarea id="message" rows="6" placeholder="Type your message here..." required></textarea>
+
+    <button type="submit">Send Emails</button>
+  </form>
+
+  <div id="status"></div>
+
+  <div id="logArea">
+    <h4>🧾 Sent Log:</h4>
+    <ul id="logList"></ul>
+  </div>
+
+  <script>
+    (function(){
+      emailjs.init("CTivTkN2aGpDGUCZl"); // PUBLIC KEY
+    })();
+
+    const form = document.getElementById("bulkEmailForm");
+    const logList = document.getElementById("logList");
+    const statusDiv = document.getElementById("status");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      logList.innerHTML = "";
+
+      const fromEmail = document.getElementById("fromEmail").value;
+      const subject = document.getElementById("subject").value;
+      const emails = document.getElementById("emails").value.split(",");
+      const message = document.getElementById("message").value;
+
+      statusDiv.textContent = "Sending emails... please wait.";
+
+      for (let email of emails) {
+        email = email.trim();
+        if (!email) continue;
+
+        const params = {
+          to_email: email,
+          from_name: "Ilm Nexus",
+          subject: subject,
+          message: message,
+          reply_to: fromEmail
+        };
+
+        const logItem = document.createElement("li");
+        logItem.innerHTML = `📨 Sending to <strong>${email}</strong>...`;
+        logItem.classList.add("log-pending");
+        logList.appendChild(logItem);
+
+        try {
+          await emailjs.send("ilm Nexus form", "template_zkexdja", params);
+          logItem.textContent = `✅ Sent to ${email}`;
+          logItem.className = "log-success";
+        } catch (err) {
+          logItem.textContent = `❌ Failed to send to ${email}`;
+          logItem.className = "log-failure";
+          console.error("Error sending to:", email, err);
+        }
+      }
+
+      statusDiv.textContent = "✔️ Emails processed. Check log below.";
+      form.reset();
+    });
+  </script>
+
+</body>
+</html>

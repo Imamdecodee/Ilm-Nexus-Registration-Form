@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Admin Dashboard – KWASU Conference</title>
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -51,7 +52,7 @@
       box-shadow: 0 6px 15px rgba(0,0,0,0.06);
     }
 
-    h2 {
+    h2, h3 {
       margin-bottom: 20px;
       font-size: 20px;
       color: #333;
@@ -94,6 +95,44 @@
       background-color: #f9fbff;
     }
 
+    /* Bulk Email Styles */
+    .email-section {
+      margin-top: 40px;
+      padding-top: 30px;
+      border-top: 1px solid #ddd;
+    }
+
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      font-weight: 500;
+    }
+
+    input, textarea, button {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #0073e6;
+      color: white;
+      margin-top: 15px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background-color: #005bb5;
+    }
+
+    .log-success { color: green; }
+    .log-failure { color: red; }
+    .log-pending { color: orange; }
+
     @media (max-width: 768px) {
       table, thead, tbody, th, td, tr {
         display: block;
@@ -127,16 +166,14 @@
 </head>
 <body>
 
-  <!-- Navbar -->
   <div class="navbar">
-    <h1>KWASU Conference – Admin Dashboard</h1>
+    <h1>Admin Dashboard</h1>
     <div>
       <button class="export-btn" onclick="exportCSV()">Export CSV</button>
       <button class="logout-btn" onclick="logout()">Logout</button>
     </div>
   </div>
 
-  <!-- Main Container -->
   <div class="container">
     <h2>Registered Participants</h2>
 
@@ -157,16 +194,42 @@
             <th>Timestamp</th>
           </tr>
         </thead>
-        <tbody id="dataBody">
-          <!-- Populated via JavaScript -->
-        </tbody>
+        <tbody id="dataBody"></tbody>
       </table>
     </div>
+
+    <!-- Bulk Email Sender -->
+    <div class="email-section">
+      <h3>📧 Send Bulk Email</h3>
+      <form id="bulkEmailForm">
+        <label for="fromEmail">Reply-To Email:</label>
+        <input type="email" id="fromEmail" required placeholder="you@example.com" />
+
+        <label for="subject">Subject:</label>
+        <input type="text" id="subject" required placeholder="Enter email subject..." />
+
+        <label for="emails">Recipient Emails (comma-separated):</label>
+        <input type="text" id="emails" required placeholder="user1@gmail.com, user2@yahoo.com" />
+
+        <label for="message">Message:</label>
+        <textarea id="message" rows="6" required placeholder="Write your message here..."></textarea>
+
+        <button type="submit">Send Emails</button>
+      </form>
+
+      <div id="status"></div>
+      <ul id="logList"></ul>
+    </div>
+
   </div>
 
-  <!-- Scripts -->
   <script>
-    // Check login
+    // EmailJS Setup
+    (function(){
+      emailjs.init("CTivTkN2aGpDGUCZl");
+    })();
+
+    // Admin Auth
     if (localStorage.getItem("admin_logged_in") !== "yes") {
       window.location.href = "admin-login.html";
     }
@@ -177,7 +240,7 @@
     function renderTable(data) {
       tbody.innerHTML = "";
       if (data.length === 0) {
-        tbody.innerHTML = "<tr><td colspan='7' style='text-align:center;'>No results found.</td></tr>";
+        tbody.innerHTML = "<tr><td colspan='7' style='text-align:center;'>No matching results.</td></tr>";
         return;
       }
 
@@ -232,6 +295,51 @@
       link.click();
       document.body.removeChild(link);
     }
+
+    // Bulk Email Sending
+    const bulkForm = document.getElementById("bulkEmailForm");
+    const logList = document.getElementById("logList");
+    const statusDiv = document.getElementById("status");
+
+    bulkForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      logList.innerHTML = "";
+      const fromEmail = document.getElementById("fromEmail").value;
+      const subject = document.getElementById("subject").value;
+      const emails = document.getElementById("emails").value.split(",");
+      const message = document.getElementById("message").value;
+      statusDiv.textContent = "Sending emails...";
+
+      for (let email of emails) {
+        email = email.trim();
+        if (!email) continue;
+
+        const logItem = document.createElement("li");
+        logItem.innerHTML = `📨 Sending to <strong>${email}</strong>...`;
+        logItem.classList.add("log-pending");
+        logList.appendChild(logItem);
+
+        const params = {
+          to_email: email,
+          from_name: "Ilm Nexus",
+          subject: subject,
+          message: message,
+          reply_to: fromEmail
+        };
+
+        try {
+          await emailjs.send("ilm Nexus form", "template_zkexdja", params);
+          logItem.textContent = `✅ Sent to ${email}`;
+          logItem.className = "log-success";
+        } catch (err) {
+          logItem.textContent = `❌ Failed to send to ${email}`;
+          logItem.className = "log-failure";
+        }
+      }
+
+      statusDiv.textContent = "✔️ All emails processed.";
+      bulkForm.reset();
+    });
   </script>
 
 </body>
