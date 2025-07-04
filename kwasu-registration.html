@@ -13,21 +13,16 @@
       --white: #fff;
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
     body {
       font-family: 'Poppins', sans-serif;
       background: var(--light);
       color: var(--text);
+      margin: 0;
     }
 
     header {
       background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7)),
-        url('https://images.unsplash.com/photo-1581093588401-12b9f5193a12') center/cover no-repeat;
+        url('https://images.unsplash.com/photo-1581093588401-12b9f5193a12?auto=format&fit=crop&w=1200') center/cover no-repeat;
       padding: 60px 20px;
       text-align: center;
       color: white;
@@ -83,6 +78,7 @@
       border: 1px dashed #ccc;
       border-radius: 6px;
       display: none;
+      background: #f9f9f9;
     }
 
     button {
@@ -151,21 +147,21 @@
 </header>
 
 <div class="container">
-  <h2>Register Now</h2>
+  <h2>Conference Registration Form</h2>
   <form id="regForm">
-    <label>Full Name</label>
+    <label>Full Name *</label>
     <input type="text" name="fullname" required>
 
-    <label>Email Address</label>
+    <label>Email Address *</label>
     <input type="email" name="email" required>
 
-    <label>Phone Number</label>
+    <label>Phone Number *</label>
     <input type="tel" name="phone" required>
 
-    <label>Department / Faculty</label>
+    <label>School / Department *</label>
     <input type="text" name="department" required>
 
-    <label>Level</label>
+    <label>Level *</label>
     <select name="level" required>
       <option value="">Select level</option>
       <option>100 Level</option>
@@ -176,7 +172,7 @@
       <option>Graduate</option>
     </select>
 
-    <label>Do you want to pitch a tech idea?</label>
+    <label>Do you want to pitch a tech idea? *</label>
     <select name="hasIdea" id="hasIdea" required>
       <option value="">Choose</option>
       <option value="yes">Yes</option>
@@ -184,16 +180,16 @@
     </select>
 
     <div class="idea-section" id="ideaSection">
-      <label>Idea Title</label>
+      <label>Idea Title *</label>
       <input type="text" name="idea_title">
 
-      <label>What problem does your idea solve?</label>
+      <label>What problem does your idea solve? *</label>
       <textarea name="problem"></textarea>
 
-      <label>Who is your target audience?</label>
+      <label>Who is your target audience? *</label>
       <input type="text" name="audience">
 
-      <label>What tools or technologies will you use?</label>
+      <label>What tools or technologies will you use? *</label>
       <input type="text" name="tools">
     </div>
 
@@ -210,8 +206,8 @@
     </select>
 
     <div class="admin-link" style="display: flex; flex-direction: column;">
-     <div> Admin? <a href="admin-login.html">Login here</a> </div>
-     <div> as a user?  <a href="staff.html">you can send a free <br> bulk email message </a> </div>
+      <div>Admin? <a href="admin-login.html">Login here</a></div>
+      <div>Want to send bulk emails? <a href="staff.html">Click here</a></div>
     </div>
 
     <button type="submit">Submit Registration</button>
@@ -230,11 +226,7 @@
   const confirmationMsg = document.getElementById("confirmationMsg");
 
   hasIdea.addEventListener("change", () => {
-    if (hasIdea.value === "yes") {
-      ideaSection.style.display = "block";
-    } else {
-      ideaSection.style.display = "none";
-    }
+    ideaSection.style.display = hasIdea.value === "yes" ? "block" : "none";
   });
 
   form.addEventListener("submit", (e) => {
@@ -250,9 +242,6 @@
     confirmationMsg.style.display = "block";
     form.reset();
     ideaSection.style.display = "none";
-
-    // Simulated bulk email sending
-    // console.log("📧 Sending emails to: ", allEntries.map(d => d.email));
   });
 </script>
 
