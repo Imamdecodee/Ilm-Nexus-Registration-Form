@@ -4,138 +4,83 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>KWASU Tech Future Conference Registration</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --primary: #0073e6;
-      --light: #f4f9ff;
-      --text: #222;
-      --white: #fff;
-    }
-
     body {
-      font-family: 'Poppins', sans-serif;
-      background: var(--light);
-      color: var(--text);
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f9ff;
+      padding: 0;
       margin: 0;
+      color: #222;
     }
-
     header {
       background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7)),
-        url('https://images.unsplash.com/photo-1581093588401-12b9f5193a12?auto=format&fit=crop&w=1200') center/cover no-repeat;
-      padding: 60px 20px;
-      text-align: center;
+      url('https://images.unsplash.com/photo-1581093588401-12b9f5193a12?auto=format&fit=crop&w=1200') center/cover no-repeat;
       color: white;
+      text-align: center;
+      padding: 60px 20px;
     }
-
     header h1 {
-      font-size: 2.4rem;
+      font-size: 2.2rem;
+      margin-bottom: 10px;
     }
-
-    header p {
-      max-width: 700px;
-      margin: 15px auto 0;
-      font-size: 1.1rem;
-    }
-
     .container {
-      max-width: 800px;
+      max-width: 700px;
       margin: 40px auto;
       background: white;
       padding: 30px;
       border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
     }
-
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
-      color: var(--primary);
-    }
-
     label {
-      font-weight: 500;
-      margin-top: 15px;
       display: block;
+      margin-top: 15px;
+      font-weight: bold;
     }
-
     input, select, textarea {
       width: 100%;
       padding: 10px;
-      margin-top: 6px;
-      border: 1px solid #ccc;
       border-radius: 6px;
+      border: 1px solid #ccc;
+      margin-top: 6px;
       font-size: 14px;
     }
-
     textarea {
-      min-height: 90px;
+      min-height: 80px;
     }
-
-    .idea-section {
-      margin-top: 10px;
-      padding: 15px;
-      border: 1px dashed #ccc;
-      border-radius: 6px;
-      display: none;
-      background: #f9f9f9;
-    }
-
     button {
-      background: var(--primary);
+      background: #0073e6;
       color: white;
       padding: 12px 20px;
-      margin-top: 25px;
       border: none;
-      font-size: 16px;
+      margin-top: 25px;
       border-radius: 6px;
+      font-size: 16px;
       cursor: pointer;
-      transition: 0.3s;
-      width: 100%;
     }
-
     button:hover {
       background: #005bb5;
     }
-
-    .admin-link {
-      text-align: right;
-      font-size: 13px;
-      margin-top: 10px;
+    .footer {
+      text-align: center;
+      font-size: 14px;
+      padding: 20px;
+      color: #888;
     }
-
+    .admin-link {
+      margin-top: 15px;
+      font-size: 13px;
+      text-align: right;
+    }
     .admin-link a {
-      color: var(--primary);
+      color: #0073e6;
       text-decoration: none;
     }
-
-    .admin-link a:hover {
-      text-decoration: underline;
-    }
-
-    .confirmation {
-      text-align: center;
-      color: green;
-      font-weight: 600;
-      margin-top: 20px;
-    }
-
-    footer {
-      text-align: center;
-      padding: 20px;
-      color: #777;
-      font-size: 14px;
-    }
-
-    @media (max-width: 600px) {
-      header h1 {
-        font-size: 1.8rem;
-      }
-
-      .container {
-        margin: 20px 15px;
-        padding: 20px;
-      }
+    .idea-section {
+      display: none;
+      border: 1px dashed #ccc;
+      padding: 10px;
+      margin-top: 15px;
+      background: #f9f9f9;
     }
   </style>
 </head>
@@ -143,26 +88,32 @@
 
 <header>
   <h1>KWASU Tech Future Conference 2025</h1>
-  <p>Organized by Ilm Nexus — Bridging Knowledge, Faith & Innovation Through Technology and Education.</p>
+  <p>Organized by Ilm Nexus – Bridging Knowledge, Faith & Innovation Through Technology.</p>
 </header>
 
 <div class="container">
-  <h2>Conference Registration Form</h2>
-  <form id="regForm">
+  <form action="https://formsubmit.co/theilmnexus@gmail.com" method="POST">
+    <!-- Hidden Inputs -->
+    <input type="hidden" name="_subject" value="New KWASU Registration from Website">
+    <input type="hidden" name="_captcha" value="false">
+    <input type="hidden" name="_template" value="table">
+    <input type="hidden" name="_next" value="https://nexus-learn.netlify.app/thank-you.html">
+
+    <!-- Visible Fields -->
     <label>Full Name *</label>
-    <input type="text" name="fullname" required>
+    <input type="text" name="Full Name" required>
 
     <label>Email Address *</label>
-    <input type="email" name="email" required>
+    <input type="email" name="Email" required>
 
     <label>Phone Number *</label>
-    <input type="tel" name="phone" required>
+    <input type="tel" name="Phone" required>
 
-    <label>School / Department *</label>
-    <input type="text" name="department" required>
+    <label>Department / Faculty *</label>
+    <input type="text" name="Department" required>
 
     <label>Level *</label>
-    <select name="level" required>
+    <select name="Level" required>
       <option value="">Select level</option>
       <option>100 Level</option>
       <option>200 Level</option>
@@ -173,31 +124,31 @@
     </select>
 
     <label>Do you want to pitch a tech idea? *</label>
-    <select name="hasIdea" id="hasIdea" required>
+    <select name="Pitching" id="hasIdea" required>
       <option value="">Choose</option>
       <option value="yes">Yes</option>
       <option value="no">No</option>
     </select>
 
     <div class="idea-section" id="ideaSection">
-      <label>Idea Title *</label>
-      <input type="text" name="idea_title">
+      <label>Idea Title</label>
+      <input type="text" name="Idea Title">
 
-      <label>What problem does your idea solve? *</label>
-      <textarea name="problem"></textarea>
+      <label>What problem does your idea solve?</label>
+      <textarea name="Problem Solved"></textarea>
 
-      <label>Who is your target audience? *</label>
-      <input type="text" name="audience">
+      <label>Who is your target audience?</label>
+      <input type="text" name="Target Audience">
 
-      <label>What tools or technologies will you use? *</label>
-      <input type="text" name="tools">
+      <label>What tools/technologies will you use?</label>
+      <input type="text" name="Tools">
     </div>
 
     <label>What digital skills are you interested in?</label>
-    <input type="text" name="skills" placeholder="e.g. Web Design, Graphics, AI...">
+    <input type="text" name="Interested Skills" placeholder="e.g. Web, AI, Graphics...">
 
     <label>How did you hear about us?</label>
-    <select name="referral">
+    <select name="Referral Source">
       <option>WhatsApp</option>
       <option>Flyer</option>
       <option>Social Media</option>
@@ -205,43 +156,23 @@
       <option>Friend</option>
     </select>
 
-    <div class="admin-link" style="display: flex; flex-direction: column;">
-      <div>Admin? <a href="admin-login.html">Login here</a></div>
-      <div>Want to send bulk emails? <a href="staff.html">Click here</a></div>
+    <div class="admin-link">
+      Admin? <a href="admin-login.html">Login here</a>
     </div>
 
     <button type="submit">Submit Registration</button>
-    <div class="confirmation" id="confirmationMsg" style="display: none;">✅ Registration submitted successfully!</div>
   </form>
 </div>
 
-<footer>
+<div class="footer">
   &copy; 2025 Ilm Nexus. All rights reserved.
-</footer>
+</div>
 
 <script>
-  const form = document.getElementById("regForm");
   const hasIdea = document.getElementById("hasIdea");
   const ideaSection = document.getElementById("ideaSection");
-  const confirmationMsg = document.getElementById("confirmationMsg");
-
   hasIdea.addEventListener("change", () => {
     ideaSection.style.display = hasIdea.value === "yes" ? "block" : "none";
-  });
-
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const formData = new FormData(form);
-    const data = Object.fromEntries(formData.entries());
-    data.timestamp = new Date().toLocaleString();
-
-    const allEntries = JSON.parse(localStorage.getItem("kwasu_registrations") || "[]");
-    allEntries.push(data);
-    localStorage.setItem("kwasu_registrations", JSON.stringify(allEntries));
-
-    confirmationMsg.style.display = "block";
-    form.reset();
-    ideaSection.style.display = "none";
   });
 </script>
 
